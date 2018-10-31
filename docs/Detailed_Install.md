@@ -15,9 +15,7 @@ In Windows, we can use PowerShell to interact with the Docker command line. Plea
 * In your folder containing the downloaded CIAB files, enter the command `docker-compose up`. If your shell is not currently in the directory containing docker-compose.yml, the command will fail. 
 * If you receive an error _Drive has not been shared_, you will need to share your drive. Docker will prompt for this when it is required, but if you miss it, the setting is available under Docker's Settings > Shared Drives
 * You should now see a variety of text outputs as the Docker Compose executes. Please note even if the final output reads _No web browser found: could not locate runnable browser_, the Jupyter notebooks are accessible via your host computer's browser.
-* Cube in a Box is now installed! The Docker Jupyter instance is now running, and accessible in your computer’s web browser at: http://localhost/, with password `secretpassword`.
-
-However, before we can use our Data Cube, we need to add some satellite data. 
+* Cube in a Box is now installed! The Docker Jupyter instance is now running, and accessible in your computer’s web browser at: http://localhost/, with password `secretpassword`. However, before we can use our Data Cube, we need to add some satellite data. 
 * Minimise the shell containing your running docker containers, then create a new terminal instance by opening a new PowerShell or Terminal window.
 * As detailed in the repositories README in the parent directory, navigate back to the folder containing your unzipped Cube in a Box install files (containing docker-compose.yaml):
   * Set up a local postgres database: `docker-compose exec jupyter datacube -v system init`
