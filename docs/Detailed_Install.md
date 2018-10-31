@@ -1,24 +1,31 @@
 # Detailed Install Instructions
-## Detailed Docker Install Instructions
-If you are unfamiliar with Docker or Jupyter, this guide will take you through downloading Docker to setting up a Cube in a Box Jupyter Server running the Open Data Cube. While these instructions specifically suit windows, the steps can easily be adapted for other a different OS, using a Terminal instead of PowerShell, and the appropriate Docker version.
+There are two options to getting started with the Open Data Cube Reference Install "Cube in a Box". The first is using local hardware, such as a desktop pc, laptop or server. The second is installing to a cloud service, such as Amazon Web Services. Both make use of Docker, a freely available platform that simplifies the distribution of ready to run applications.
 
-* First, [download Docker for Windows](https://docs.docker.com/docker-for-windows/install/).
-In Windows, we can use PowerShell to interact with the Docker command line. Please note, PowerShell ISE will not work.
-* Next, download the [Data Cube setup files and code](https://github.com/LSgeo/opendatacube-cloudformation-testing/archive/master.zip) from the above repository and unzip into a local folder of your choice. Navigate to this folder in PowerShell using the cd command, e.g. 'cd C:/cubeinabox/'. Don't forget, you can use tab to complete, and dir to display the contents of the current folder.
-* Follow [Docker's Orientation](https://docs.docker.com/get-started/) to familiarise yourself with Docker. At the end, you should be able to run `docker info` to view your installation details. These details can help troubleshoot a Docker installation.
+As a very brief overview of the components to Docker, a Docker *image* is a read-only template with instructions for creating a Docker container. A Docker *container* is a runnable instance of an image, which shares resources with its host operating system, as opposed to a Virtual Machine which must run its own OS.  More information is available on [Dockers extensive documentation](https://docs.docker.com/engine/docker-overview/#docker-objects).
+
+
+## Detailed Docker Install Instructions
+If you are unfamiliar with Docker or Jupyter, this guide will take you through downloading Docker to setting up a Cube in a Box Jupyter Server running the Open Data Cube. While these instructions suit both OSX and Windows, the steps can easily be adapted for other a different OS, using the appropriate Docker version. Please note the ODC image, plus additional dependencies installed to the container will come to several hundred Megabytes. However, as satellite imagery are stored on the cloud and only loaded when called, disk space requirements are minimal.
+
+* First, download Docker [for Windows](https://docs.docker.com/docker-for-windows/install/) or [for Mac](https://docs.docker.com/docker-for-mac/install/).
+In Windows, we can use PowerShell to interact with the Docker command line. Please note, PowerShell ISE will not work. In Mac, we can use the terminal.
+* Run Docker for the first time and follow [Docker's Orientation](https://docs.docker.com/get-started/) to familiarise yourself with Docker. If you are on Windows, you need to select to use Linux containers, not Windows containers. At the end, you should be able to run `docker info` to view your installation details. These details can help troubleshoot a Docker installation if necessary.
+* Next, download the [Data Cube setup files and code](https://github.com/crc-si/cube-in-a-box/archive/master.zip) from this repository and unzip it into a local folder of your choice. Navigate to this folder in PowerShell using the cd command, e.g. 'cd C:/cubeinabox/'. Don't forget, you can use tab to complete, and dir to display the contents of the current folder.
 * Now, we are going to create and run the Docker Container for our CIAB install. 
-* In your folder containing the downloaded CIAB files, enter the command `docker-compose up`. If your shell is not currently in the directory containing docker-compose.yml, the command will fail. You also need to use Linux containers, not windows containers for your docker installation.  
+* In your folder containing the downloaded CIAB files, enter the command `docker-compose up`. If your shell is not currently in the directory containing docker-compose.yml, the command will fail. 
 * If you receive an error _Drive has not been shared_, you will need to share your drive. Docker will prompt for this when it is required, but if you miss it, the setting is available under Docker's Settings > Shared Drives
 * You should now see a variety of text outputs as the Docker Compose executes. Please note even if the final output reads _No web browser found: could not locate runnable browser_, the Jupyter notebooks are accessible via your host computer's browser.
-* The Docker Jupyter instance is now running, and accessible in your computer’s web browser at: http://localhost/, with password `secretpassword`. However, before we can use our Data Cube, we need to add some satellite data.
-* Minimise the shell containing your running docker containers, then create a new shell instance by opening a new PowerShell window.
-* As shown above, we:
+* Cube in a Box is now installed! The Docker Jupyter instance is now running, and accessible in your computer’s web browser at: http://localhost/, with password `secretpassword`.
+
+However, before we can use our Data Cube, we need to add some satellite data. 
+* Minimise the shell containing your running docker containers, then create a new terminal instance by opening a new PowerShell or Terminal window.
+* As detailed in the repositories README in the parent directory, navigate back to the folder containing your unzipped Cube in a Box install files (containing docker-compose.yaml):
   * Set up a local postgres database: `docker-compose exec jupyter datacube -v system init`
-  * [Address the Landsat 8 data], using the pathrows file. Download the file from [the USGS Landsat site](https://landsat.usgs.gov/sites/default/files/documents/WRS2_descending.zip) and save the zip file to `/data/wrs2_descending.zip` on your local machine. This folder is mounted within the Docker container, and can be used to share files between your host machine and the container.
-   * [Add the Landsat ls_usgs _Product Definition_](https://datacube-core.readthedocs.io/en/latest/ops/indexing.html#product-definition): `docker-compose exec jupyter datacube product add /opt/odc/docs/config_samples/dataset_types/ls_usgs.yaml`
+  * Download the pathrows file from the [USGS Landsat site](https://landsat.usgs.gov/sites/default/files/documents/WRS2_descending.zip) and save the zip file to `data/wrs2_descending.zip` on your local machine. This folder is mounted within the Docker container, and can be used to share files between your host machine and the container. The  pathrows file makes the Landsat 8 PDS on AWS easily accessible.
+   * Add the Landsat ls_usgs [_Product Definition_](https://datacube-core.readthedocs.io/en/latest/ops/indexing.html#product-definition): `docker-compose exec jupyter datacube product add /opt/odc/docs/config_samples/dataset_types/ls_usgs.yaml`
    * [_Index_](https://datacube-core.readthedocs.io/en/latest/ops/indexing.html#adding-data-indexing) a default region with:
    * `docker-compose exec jupyter bash -c "cd /opt/odc/scripts && python3 ./autoIndex.py -p '/opt/odc/data/wrs2_descending.zip' -e '146.30,146.83,-43.54,-43.20'"`This commands indexes the [AWS LandSat-8 PDS Product](https://docs.opendata.aws/landsat-pds/readme.html). for a particular region of the global product, with the region definable by the coordinates listed.
-* Once the download finishes and the prompt returns, it is okay to return to the Jupyter notebooks, at http://localhost on your host machine.
+* Once the terminal finishes its process from the above and the prompt returns, it is okay to return to the Jupyter notebooks, at http://localhost on your host machine.
 You should now see several notebook files, which can be run, editted and examined.
 
 If you want to make changes within the docker container, the underlying Linux terminal is accessible by executing `docker-compose exec jupyter bash` in PowerShell. This will start a terminal session within the container, where you can execute Linux commands to install additional packages, etc. 
