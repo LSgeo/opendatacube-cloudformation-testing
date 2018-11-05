@@ -10,7 +10,7 @@ If you are unfamiliar with Docker or Jupyter, this guide will take you through d
 * First, download Docker [for Windows](https://docs.docker.com/docker-for-windows/install/) or [for Mac](https://docs.docker.com/docker-for-mac/install/).
 In Windows, we can use PowerShell to interact with the Docker command line. Please note, PowerShell ISE will not work. In Mac, we can use the terminal.
 * Run Docker for the first time and follow [Docker's Orientation](https://docs.docker.com/get-started/) to familiarise yourself with Docker. If you are on Windows, you need to select to use Linux containers, not Windows containers. At the end, you should be able to run `docker info` to view your installation details. These details can help troubleshoot a Docker installation if necessary.
-* Next, download the [Data Cube setup files and code](https://github.com/crc-si/cube-in-a-box/archive/master.zip) from this repository and unzip it into a local folder of your choice. Navigate to this folder in PowerShell using the cd command, e.g. 'cd C:/cubeinabox/'. Don't forget, you can use tab to complete, and dir to display the contents of the current folder.
+* Next, download the [Data Cube setup files and code](https://github.com/crc-si/cube-in-a-box/archive/master.zip) from this repository and unzip it into a local folder of your choice. Navigate to this folder in PowerShell using the cd command, e.g. 'cd C:/cubeinabox/'. Don't forget, you can use tab to complete, and dir or ls to display the contents of the current folder.
 * Now, we are going to create and run the Docker Container for our CIAB install. 
 * In your folder containing the downloaded CIAB files, enter the command `docker-compose up`. If your shell is not currently in the directory containing docker-compose.yml, the command will fail. 
 * If you receive an error _Drive has not been shared_, you will need to share your drive. Docker will prompt for this when it is required, but if you miss it, the setting is available under Docker's Settings > Shared Drives
@@ -21,9 +21,9 @@ In Windows, we can use PowerShell to interact with the Docker command line. Plea
   * Set up a local postgres database: `docker-compose exec jupyter datacube -v system init`
   * Download the pathrows file from the [USGS Landsat site](https://landsat.usgs.gov/sites/default/files/documents/WRS2_descending.zip) and save the zip file to `data/wrs2_descending.zip` on your local machine. This folder is mounted within the Docker container, and can be used to share files between your host machine and the container. The  pathrows file makes the Landsat 8 PDS on AWS easily accessible.
    * Add the Landsat ls_usgs [_Product Definition_](https://datacube-core.readthedocs.io/en/latest/ops/indexing.html#product-definition): `docker-compose exec jupyter datacube product add /opt/odc/docs/config_samples/dataset_types/ls_usgs.yaml`
-   * [_Index_](https://datacube-core.readthedocs.io/en/latest/ops/indexing.html#adding-data-indexing) a default region with: `docker-compose exec jupyter bash -c "cd /opt/odc/scripts && python3 ./autoIndex.py -p '/opt/odc/data/wrs2_descending.zip' -e '146.30,146.83,-43.54,-43.20'"`This command indexes the [AWS LandSat-8 PDS Product](https://docs.opendata.aws/landsat-pds/readme.html). for a particular region of the global product, with the region definable by the coordinates listed.
+   * [_Index_](https://datacube-core.readthedocs.io/en/latest/ops/indexing.html#adding-data-indexing) a default region with: `docker-compose exec jupyter bash -c "cd /opt/odc/scripts && python3 ./autoIndex.py -p '/opt/odc/data/wrs2_descending.zip' -e '146.30,146.83,-43.54,-43.20'"`This command indexes the [AWS LandSat-8 PDS Product](https://docs.opendata.aws/landsat-pds/readme.html) for a particular region of the global product, with the region definable by the coordinates listed.
 * Once the terminal finishes its process from the above and the prompt returns, it is okay to return to the Jupyter notebooks, at http://localhost on your host machine.
-You should now see several notebook files, which can be run, editted and examined.
+You should now see several notebook files, which can be run, edited and examined.
 
 If you want to make changes within the docker container, the underlying Linux terminal is accessible by executing `docker-compose exec jupyter bash` in PowerShell. This will start a terminal session within the container, where you can execute Linux commands to install additional packages, etc. 
 It is also possible to use [IPython Magic Commands](https://ipython.readthedocs.io/en/stable/interactive/magics.html) to execute some bash commands from within a Notebook. Write `%% Bash` at the top of a cell, and that cell will execute commands to the terminal. Not all commands work, however pip will function to install and update python packages.
@@ -45,7 +45,7 @@ If you are unfamiliar with AWS, this detailed guide can help you set up an AWS a
 * If these are successful, you will be taken to the Stack manager. Note the Filter “Active” option can be changed to see In Progress or Failed stacks.
 * Click on the “Outputs” tab to see the publicDNS of your EC2 server, which can be navigated to in your browser. This contains your Jupyter server. It may take a minute or two for Jupyter to prepare itself (no more than 5 minutes). Your password will be the secretpassword you set earlier, or simply `secretpassword`.
 
-You should now see several notebook files, which can be run, editted and examined.
+You should now see several notebook files, which can be run, edited and examined.
 
 # Troubleshooting
 * Observe the output of each step above, and check for key words such as "Error", "Warning", "Exception" etc. Should a problem occur, here are some initial troubleshooting points to try:
