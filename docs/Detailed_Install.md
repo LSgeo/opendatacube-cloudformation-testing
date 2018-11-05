@@ -46,3 +46,9 @@ If you are unfamiliar with AWS, this detailed guide can help you set up an AWS a
 * Click on the “Outputs” tab to see the publicDNS of your EC2 server, which can be navigated to in your browser. This contains your Jupyter server. It may take a minute or two for Jupyter to prepare itself (no more than 5 minutes). Your password will be the secretpassword you set earlier, or simply `secretpassword`.
 
 You should now see several notebook files, which can be run, editted and examined.
+
+# Troubleshooting
+* Observe the output of each step above, and check for key words such as "Error", "Warning", "Exception" etc. Should a problem occur, here are some initial troubleshooting points to try:
+* Check your spelling and use of punctuation in scripts. You can usually copy and paste into a terminal using one or more of control+v, right click, or middle click.
+* Check you are in the correct directory. Most commands are run with your terminal in the directory containing the downloaded Docker files.
+* To update and reinstall the Open Data Cube Docker CIAB, `docker pull opendatacube/datacube-core` and `docker-compose build`, followed by `docker-compose up --force-recreate`. Note this will remove all indexed data.
